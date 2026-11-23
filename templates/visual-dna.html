@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<title>Visual DNA — {{BRAND_NAME}}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--muted:#8b949e;--accent:#ffd84d;--accent2:#a371f7;--green:#3fb950}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
+.wrap{max-width:1300px;margin:0 auto;padding:24px 18px 80px}
+header{padding:28px;border-radius:18px;background:linear-gradient(135deg,#1f1130,#0d1620);border:1px solid var(--border);margin-bottom:20px;text-align:center}
+header h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;color:var(--accent)}
+header .mood{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+header .mood span{padding:5px 12px;border-radius:999px;border:1px solid var(--accent2);color:var(--accent2);font-size:12px;background:rgba(163,113,247,.1)}
+header .tone{margin-top:8px;color:var(--muted);font-size:14px}
+
+.grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.cell{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;transition:.15s}
+.cell:hover{border-color:var(--accent);transform:translateY(-2px)}
+.cell .num{position:absolute;top:-8px;left:-8px;width:26px;height:26px;background:var(--accent);color:#000;border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cell h3{margin:0 0 8px;font-size:13px;color:var(--accent);font-weight:600}
+.cell .choice{font-weight:600;color:#fff;margin:6px 0;font-size:14px}
+.cell .note{color:var(--muted);font-size:11px;line-height:1.4}
+
+.sig-panel{background:linear-gradient(135deg,#1f1130,#2a1810);border:2px solid var(--accent);border-radius:16px;padding:20px;margin:20px 0;text-align:center}
+.sig-panel h2{margin:0 0 4px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.sig-panel .sig-value{font-size:26px;font-weight:700;margin:8px 0;color:#fff}
+.sig-panel .sig-meta{color:var(--muted);font-size:12px}
+
+.section-title{margin:24px 0 10px;font-size:16px;color:var(--accent);letter-spacing:-.01em;padding-left:8px;border-left:3px solid var(--accent)}
+.palette{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.swatch{width:80px;text-align:center;cursor:pointer}
+.swatch .color{width:80px;height:80px;border-radius:10px;border:1px solid var(--border)}
+.swatch .hex{font-size:11px;color:var(--muted);margin-top:4px;font-family:monospace}
+.fonts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0}
+.fonts div{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.fonts div h4{margin:0 0 4px;color:var(--accent);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.fonts div .sample{font-size:22px;color:#fff;margin:4px 0}
+.fonts div .name{font-size:11px;color:var(--muted);font-family:monospace}
+
+.refs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.refs a{display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);text-decoration:none;font-size:13px;transition:.15s}
+.refs a:hover{border-color:var(--accent);color:var(--accent)}
+.refs a small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+
+.checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.checklist label{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;cursor:pointer}
+.checklist input{margin-top:3px;transform:scale(1.2)}
+.checklist label:has(input:checked){color:var(--green);text-decoration:line-through;opacity:.6}
+
+footer{margin-top:30px;color:var(--muted);font-size:11px;text-align:center}
+@media (max-width:780px){.grid9,.refs{grid-template-columns:1fr}.fonts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="brand-name">{{BRAND_NAME}}</h1>
+    <div class="tone" id="tagline">{{BRAND_TAGLINE}}</div>
+    <div class="mood" id="mood-tags"></div>
+    <div class="tone" style="margin-top:14px">Tone: <b id="tone">Anh đại</b></div>
+  </header>
+
+  <div class="section-title">9 yếu tố visual khuôn mẫu (DNA nhận diện)</div>
+  <div class="grid9" id="grid9"></div>
+
+  <div class="sig-panel">
+    <h2>✨ Signature lặp ở MỌI video</h2>
+    <div class="sig-value" id="sig-value">"Anh em ơi, chốt!"</div>
+    <div class="sig-meta" id="sig-meta">Câu nói · cuối video · 1.5 giây</div>
+  </div>
+
+  <div class="section-title">🎨 Color palette</div>
+  <div class="palette" id="palette"></div>
+
+  <div class="section-title">🔤 Fonts</div>
+  <div class="fonts" id="fonts"></div>
+
+  <div class="section-title">📺 Reference (3 kênh benchmark)</div>
+  <div class="refs" id="refs"></div>
+
+  <div class="section-title">✅ Checklist tuân thủ DNA (15 dòng)</div>
+  <div class="checklist" id="checklist"></div>
+
+  <footer>Generated by <b>visual-dna-designer</b> · Bundle: viral-grid-suite</footer>
+</div>
+
+<script>
+window.VISUAL_DNA = window.VISUAL_DNA || {
+  brand:{name:"Hải VN", tagline:"Sống Nam Tính Mới", mood:["tinh tế","mạnh mẽ","ấm áp"], tone:"Anh đại"},
+  visual_dna:{
+    "1":{title:"Phong cách tổng thể", choice:"Bình dân / chân thật / kiểu quay dạo", note:"Handheld, ánh sáng tự nhiên, không edit nặng"},
+    "2":{title:"Góc quay", choice:"POV của chính nhân vật", note:"Người xem cảm thấy như người trong cuộc"},
+    "3":{title:"Ngôn ngữ & caption", choice:"Bình dân + gãi chỗ ngứa", note:"Câu chữ trực diện, chạm pain cụ thể"},
+    "4":{title:"Màu sắc & ánh sáng", choice:"Tông ấm, đèn vàng đêm", note:"Thân mật, ấm áp, nam tính"},
+    "5":{title:"Font chữ", choice:"Tay viết (Caveat) + bật theo lời", note:"Subtitle dynamic, gần gũi"},
+    "6":{title:"Âm thanh & voice", choice:"Voice thật, ambient nhẹ, BGM không lời", note:"Tự nhiên, không bị làm màu"},
+    "7":{title:"Tương tác", choice:"Câu hỏi cuối + CTA follow", note:"Mời thảo luận tự nhiên"},
+    "8":{title:"Nhịp dựng", choice:"Dựng theo beat + jumpcut", note:"Năng lượng cao, giữ chân"},
+    "9":{title:"Nhân vật hiện diện", choice:"Có mặt, tương tác camera, đời thường", note:"Founder/anh đại đứng trước camera"}
+  },
+  signature:{type:"câu nói", value:"\"Anh em ơi, chốt!\"", position:"cuối video, 1.5 giây"},
+  palette:["#1f2937","#f59e0b","#dc2626","#fef3c7"],
+  fonts:{display:"Bebas Neue", body:"Inter", caption:"Caveat"},
+  refs:[
+    {name:"@anh-tom", url:"#", note:"Lifestyle nam, tone bình dân"},
+    {name:"@hung-pham", url:"#", note:"Vlog đời thường, jumpcut"},
+    {name:"@nam-tinh-co", url:"#", note:"Storytelling, tông vàng"}
+  ],
+  checklist:[
+    "9 yếu tố đều có lựa chọn cụ thể",
+    "Signature xuất hiện trong MỌI video (tự kiểm tra 10 video gần nhất)",
+    "Color palette dùng đúng tỷ lệ 60/30/10",
+    "Font display/body/caption không trộn lẫn",
+    "Nhịp dựng đồng bộ với voice tone",
+    "Có ambient sound trong ≥80% video",
+    "Caption bật theo lời thoại — không trễ",
+    "Khung mở đầu có signature hoặc nhân vật xuất hiện trong 0.5s",
+    "Mỗi video có ≥1 câu hỏi tương tác",
+    "Khung kết có CTA follow + signature",
+    "Reference 3 kênh đã được team xem hết",
+    "Có file SOP DNA gửi cho toàn team Media",
+    "Sau 10 video, audit lại 9 yếu tố có còn nhất quán",
+    "Khán giả nhận ra kênh trong 1 giây đầu khi lướt feed",
+    "Không đổi >1 yếu tố trong 90 ngày đầu"
+  ]
+};
+
+const D = window.VISUAL_DNA;
+document.getElementById("brand-name").textContent = D.brand.name;
+document.getElementById("tagline").textContent = D.brand.tagline;
+document.getElementById("tone").textContent = D.brand.tone;
+document.getElementById("mood-tags").innerHTML = D.brand.mood.map(m=>`<span>${m}</span>`).join("");
+
+// 9 grid
+const grid = document.getElementById("grid9");
+for(let i=1;i<=9;i++){
+  const c = D.visual_dna[i];
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.innerHTML = `<div class="num">${i}</div><h3>${c.title}</h3><div class="choice">${c.choice}</div><div class="note">${c.note||""}</div>`;
+  grid.appendChild(cell);
+}
+
+// Signature
+document.getElementById("sig-value").textContent = D.signature.value;
+document.getElementById("sig-meta").textContent = `${D.signature.type} · ${D.signature.position}`;
+
+// Palette
+const pal = document.getElementById("palette");
+D.palette.forEach(hex=>{
+  const sw = document.createElement("div");
+  sw.className = "swatch";
+  sw.innerHTML = `<div class="color" style="background:${hex}"></div><div class="hex">${hex}</div>`;
+  sw.onclick = ()=>{navigator.clipboard.writeText(hex); sw.querySelector(".hex").textContent="Copied!"; setTimeout(()=>sw.querySelector(".hex").textContent=hex,1000)};
+  pal.appendChild(sw);
+});
+
+// Fonts
+const fontsEl = document.getElementById("fonts");
+["display","body","caption"].forEach(k=>{
+  const div = document.createElement("div");
+  div.innerHTML = `<h4>${k}</h4><div class="sample">${D.fonts[k]}</div><div class="name">${D.fonts[k]}</div>`;
+  fontsEl.appendChild(div);
+});
+
+// Refs
+const refs = document.getElementById("refs");
+D.refs.forEach(r=>{
+  const a = document.createElement("a");
+  a.href = r.url||"#"; a.target="_blank";
+  a.innerHTML = `<b>${r.name}</b><small>${r.note}</small>`;
+  refs.appendChild(a);
+});
+
+// Checklist
+const cl = document.getElementById("checklist");
+D.checklist.forEach((t,i)=>{
+  const l = document.createElement("label");
+  l.innerHTML = `<input type="checkbox" id="cb${i}"/><span>${t}</span>`;
+  cl.appendChild(l);
+});
+</script>
+</body>
+</html>
